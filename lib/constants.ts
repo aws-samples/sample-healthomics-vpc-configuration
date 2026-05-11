@@ -9,12 +9,12 @@ export type HealthOmicsRegionMap = Record<string, RegionConfig>;
 
 export const HEALTHOMICS_REGION_MAP: HealthOmicsRegionMap = {
   'us-west-2': {
-    azs: ['us-west-2a', 'us-west-2b', 'us-west-2c'],
-    azIds: ['usw2-az2', 'usw2-az1', 'usw2-az3'],
+    azs: ['us-west-2a', 'us-west-2b', 'us-west-2c', 'us-west-2d'],
+    azIds: ['usw2-az2', 'usw2-az1', 'usw2-az3', 'usw2-az4'],
   },
   'us-east-1': {
-    azs: ['us-east-1a', 'us-east-1b', 'us-east-1c', 'us-east-1d'],
-    azIds: ['use1-az4', 'use1-az6', 'use1-az1', 'use1-az2'],
+    azs: ['us-east-1a', 'us-east-1b', 'us-east-1c', 'us-east-1d', 'us-east-1f'],
+    azIds: ['use1-az4', 'use1-az6', 'use1-az1', 'use1-az2', 'use1-az5'],
   },
   'eu-west-1': {
     azs: ['eu-west-1a', 'eu-west-1b', 'eu-west-1c'],

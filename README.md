@@ -145,8 +145,8 @@ The construct validates that the stack is deployed in a HealthOmics-supported re
 
 | Region | AZs |
 |---|---|
-| `us-east-1` | 4 AZs (a, b, c, d) |
-| `us-west-2` | 3 AZs (a, b, c) |
+| `us-east-1` | 5 AZs (a, b, c, d, f) |
+| `us-west-2` | 4 AZs (a, b, c, d) |
 | `eu-west-1` | 3 AZs (a, b, c) |
 | `eu-west-2` | 3 AZs (a, b, c) |
 | `eu-central-1` | 3 AZs (a, b, c) |
