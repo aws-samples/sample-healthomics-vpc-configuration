@@ -4,7 +4,7 @@
 // Unit tests for HealthOmics networking configuration integration
 
 import * as cdk from 'aws-cdk-lib';
-import { Template } from 'aws-cdk-lib/assertions';
+import { Match, Template } from 'aws-cdk-lib/assertions';
 import { HealthOmicsVpc } from '../lib/healthomics-vpc';
 
 const REGION = 'us-east-1';
@@ -17,30 +17,34 @@ function buildStack(props: Record<string, any> = {}) {
 }
 
 describe('HealthOmics Networking Configuration', () => {
-  it('should not create a custom resource when networkingConfigurationName is not set', () => {
+  it('should not create an Omics Configuration when networkingConfigurationName is not set', () => {
     const template = buildStack();
-    const customResources = template.findResources('Custom::AWS');
-    expect(Object.keys(customResources).length).toBe(0);
+    const configs = template.findResources('AWS::Omics::Configuration');
+    expect(Object.keys(configs).length).toBe(0);
   });
 
-  it('should create a custom resource when networkingConfigurationName is set', () => {
+  it('should create an AWS::Omics::Configuration when networkingConfigurationName is set', () => {
     const template = buildStack({
       networkingConfigurationName: 'my-omics-vpc-config',
     });
-    const customResources = template.findResources('Custom::AWS');
-    expect(Object.keys(customResources).length).toBeGreaterThanOrEqual(1);
-
-    // Verify the custom resource references the Omics service
-    const crEntries = Object.values(customResources);
-    const hasOmicsCall = crEntries.some((cr: any) => {
-      const props = cr.Properties ?? {};
-      const propsStr = JSON.stringify(props);
-      return (
-        propsStr.includes('Omics') &&
-        propsStr.includes('createConfiguration')
-      );
+    template.resourceCountIs('AWS::Omics::Configuration', 1);
+    template.hasResourceProperties('AWS::Omics::Configuration', {
+      Name: 'my-omics-vpc-config',
     });
-    expect(hasOmicsCall).toBe(true);
+  });
+
+  it('should include VPC config with subnet and security group references', () => {
+    const template = buildStack({
+      networkingConfigurationName: 'my-omics-vpc-config',
+    });
+    template.hasResourceProperties('AWS::Omics::Configuration', {
+      RunConfigurations: {
+        VpcConfig: {
+          SubnetIds: Match.anyValue(),
+          SecurityGroupIds: Match.anyValue(),
+        },
+      },
+    });
   });
 
   it('should output NetworkingConfigurationName when set', () => {
@@ -65,23 +69,12 @@ describe('HealthOmics Networking Configuration', () => {
     ).toBe(true);
   });
 
-  it('should include an IAM policy for omics networking configuration actions', () => {
+  it('should have a DeletionPolicy of Delete', () => {
     const template = buildStack({
       networkingConfigurationName: 'test-config',
     });
-    // The AwsCustomResource creates an IAM policy with the required actions
-    const policies = template.findResources('AWS::IAM::Policy');
-    const policyEntries = Object.values(policies);
-    const hasOmicsPolicy = policyEntries.some((p: any) => {
-      const statements = p.Properties?.PolicyDocument?.Statement;
-      if (!Array.isArray(statements)) return false;
-      return statements.some((s: any) => {
-        const actions: string[] = s.Action ?? [];
-        return actions.some((a: string) =>
-          a.includes('omics:CreateConfiguration')
-        );
-      });
-    });
-    expect(hasOmicsPolicy).toBe(true);
+    const configs = template.findResources('AWS::Omics::Configuration');
+    const config = Object.values(configs)[0] as any;
+    expect(config.DeletionPolicy).toBe('Delete');
   });
 });
