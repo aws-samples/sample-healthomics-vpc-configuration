@@ -16,6 +16,27 @@ describe('RegionValidator - validateRegion', () => {
     expect(result).toEqual(['us-west-2a', 'us-west-2b', 'us-west-2c', 'us-west-2d']);
   });
 
+  // Requirement 10.1: Ohio (us-east-2) is a supported HealthOmics VPC region
+  it('should return all AZs for us-east-2 (Ohio)', () => {
+    const result = validateRegion('us-east-2');
+    expect(result).toEqual(['us-east-2a', 'us-east-2b', 'us-east-2c']);
+    expect(result).toHaveLength(3);
+  });
+
+  // Requirement 10.1: Tokyo (ap-northeast-1) supports zones a, c, d only (no "b")
+  it('should return a, c, d for ap-northeast-1 (Tokyo) and not include ap-northeast-1b', () => {
+    const result = validateRegion('ap-northeast-1');
+    expect(result).toEqual(['ap-northeast-1a', 'ap-northeast-1c', 'ap-northeast-1d']);
+    expect(result).not.toContain('ap-northeast-1b');
+  });
+
+  // Requirement 10.3: ap-northeast-1b is not a valid HealthOmics AZ for Tokyo
+  it('should reject ap-northeast-1b as an invalid AZ for Tokyo', () => {
+    expect(() => validateRegion('ap-northeast-1', ['ap-northeast-1b'])).toThrowError(
+      /Availability zone\(s\) 'ap-northeast-1b' are not valid for HealthOmics in region 'ap-northeast-1'/
+    );
+  });
+
   // Requirement 10.1: Valid region with valid AZ subset returns those AZs
   it('should return the requested AZs when they are valid for the region', () => {
     const result = validateRegion('us-east-1', ['us-east-1a', 'us-east-1b']);

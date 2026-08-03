@@ -6,7 +6,7 @@ It handles multi-AZ networking, NAT gateways, least-privilege security groups, V
 
 ## Key Capabilities
 
-- Region validation against HealthOmics-supported AWS regions (8 regions)
+- Region validation against HealthOmics-supported AWS regions (10 regions)
 - Two deployment modes: `development` (1 shared NAT, lower cost) and `production` (1 NAT per AZ, HA)
 - Least-privilege security group: no inbound, HTTPS-only (port 443) outbound
 - VPC endpoints for S3 (gateway), ECR API, ECR Docker, SSM, and CloudWatch Logs (interface)

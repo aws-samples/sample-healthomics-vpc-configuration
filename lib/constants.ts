@@ -16,6 +16,10 @@ export const HEALTHOMICS_REGION_MAP: HealthOmicsRegionMap = {
     azs: ['us-east-1a', 'us-east-1b', 'us-east-1c', 'us-east-1d', 'us-east-1f'],
     azIds: ['use1-az4', 'use1-az6', 'use1-az1', 'use1-az2', 'use1-az5'],
   },
+  'us-east-2': {
+    azs: ['us-east-2a', 'us-east-2b', 'us-east-2c'],
+    azIds: ['use2-az1', 'use2-az2', 'use2-az3'],
+  },
   'eu-west-1': {
     azs: ['eu-west-1a', 'eu-west-1b', 'eu-west-1c'],
     azIds: ['euw1-az2', 'euw1-az3', 'euw1-az1'],
@@ -39,6 +43,11 @@ export const HEALTHOMICS_REGION_MAP: HealthOmicsRegionMap = {
   'ap-northeast-2': {
     azs: ['ap-northeast-2a', 'ap-northeast-2b', 'ap-northeast-2c'],
     azIds: ['apne2-az1', 'apne2-az2', 'apne2-az3'],
+  },
+  // Tokyo supports zones a, c, and d only — there is no ap-northeast-1b for HealthOmics
+  'ap-northeast-1': {
+    azs: ['ap-northeast-1a', 'ap-northeast-1c', 'ap-northeast-1d'],
+    azIds: ['apne1-az4', 'apne1-az1', 'apne1-az2'],
   },
 };
 
